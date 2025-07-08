@@ -8,6 +8,8 @@
 1. Run `runpod.sh`
 2. Run `gh auth`
 3. Run `claude`
+4. Mason install pyright + ruff
+5. export UV_CACHE_DIR=/workspace/.cache/uv
 
 ### Seems buggy
 
