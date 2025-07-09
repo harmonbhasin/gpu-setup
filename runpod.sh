@@ -102,5 +102,7 @@ echo "export LANG=en_US.UTF-8" >> ~/.bashrc
 echo "export LC_ALL=en_US.UTF-8" >> ~/.bashrc
 echo "export LC_CTYPE=en_US.UTF-8" >> ~/.bashrc
 echo "export TERM=xterm-256color" >> ~/.bashrc
+echo "export gs=git status" >> ~/.bashrc
+echo "export gpom=git push origin main" >> ~/.bashrc
 source ~/.bashrc
 
