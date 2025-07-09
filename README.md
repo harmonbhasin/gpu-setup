@@ -4,6 +4,7 @@
 ## Runpod
 
 
+If using scp support, run `TERM=xterm-256color` as ghostty won't be recognized
 
 1. Run `runpod.sh`
 2. Run `gh auth`
