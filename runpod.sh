@@ -7,7 +7,7 @@ pip install uv
 
 # Other stuff
 apt update 
-apt install -y vim gh npm zoxide ripgrep fzf tmux htop redis-server lsof net-tools iperf3
+apt install -y vim gh npm zoxide ripgrep fzf tmux htop redis-server lsof net-tools iperf3 jq
 
 # Fix; necessary for markdown neovim plugin
 apt-get update && apt-get install -y locales
