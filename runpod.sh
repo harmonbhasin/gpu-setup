@@ -7,7 +7,7 @@ pip install uv
 
 # Other stuff
 apt update 
-apt install -y vim gh npm zoxide ripgrep fzf tmux htop redis-server lsof net-tools iperf3 jq
+apt install -y vim gh npm zoxide ripgrep fzf tmux htop redis-server lsof net-tools iperf3 jq exa
 
 # Fix; necessary for markdown neovim plugin
 apt-get update && apt-get install -y locales
@@ -97,6 +97,7 @@ echo '[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"' >> ~/.
 echo "alias vi=nvim" >> ~/.bashrc
 echo "alias v=nvim" >> ~/.bashrc
 echo "alias vim=nvim" >> ~/.bashrc
+echo "alias ls=exa" >> ~/.bashrc
 echo "set -o vi" >> ~/.bashrc
 echo "export LANG=en_US.UTF-8" >> ~/.bashrc
 echo "export LC_ALL=en_US.UTF-8" >> ~/.bashrc
