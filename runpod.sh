@@ -88,6 +88,10 @@ ln -s /workspace/dotfiles/nvim /root/.config/
 ln -s /workspace/dotfiles/claude/CLAUDE.md /root/.claude/
 ln -s /workspace/dotfiles/claude/commands /root/.claude/
 
+# config for uv
+export UV_CACHE_DIR=/workspace/.cache/uv
+mkdir -p /workspace/.cache/uv
+
 # nsys
 wget https://developer.nvidia.com/downloads/assets/tools/secure/nsight-systems/2025_3/NsightSystems-linux-cli-public-2025.3.1.90-3582212.deb
 dpkg -i NsightSystems-linux-cli-public-2025.3.1.90-3582212.deb
