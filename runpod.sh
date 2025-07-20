@@ -89,7 +89,7 @@ ln -s /workspace/dotfiles/claude/CLAUDE.md /root/.claude/
 ln -s /workspace/dotfiles/claude/commands /root/.claude/
 
 # config for uv
-export UV_CACHE_DIR=/workspace/.cache/uv
+echo 'export UV_CACHE_DIR=/workspace/.cache/uv' >> ~/.bashrc
 mkdir -p /workspace/.cache/uv
 
 # nsys
