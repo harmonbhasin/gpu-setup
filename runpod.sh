@@ -33,6 +33,7 @@ echo 'export PATH="$PATH:/opt/nvim-linux-x86_64/bin"' >> ~/.bashrc
 # login
 npm install -g @anthropic-ai/claude-code
 npm install -g ccusage
+npm install -g tldr
 
 # Github; i feel like gh auth should be able to be automated if i pass the auth key as a token to input
 git config --global user.email "harmonprograms@protonmail.com"
