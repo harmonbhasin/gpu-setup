@@ -97,19 +97,18 @@ mkdir -p /workspace/.cache/uv
 wget https://developer.nvidia.com/downloads/assets/tools/secure/nsight-systems/2025_3/NsightSystems-linux-cli-public-2025.3.1.90-3582212.deb
 dpkg -i NsightSystems-linux-cli-public-2025.3.1.90-3582212.deb
 
+# Source common configuration from dotfiles
+echo 'source /workspace/dotfiles/bash/.bashrc' >> ~/.bashrc
+
+# Runpod specific setup
 echo 'export NVM_DIR="$HOME/.nvm"' >> ~/.bashrc
 echo '[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"' >> ~/.bashrc
 echo '[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"' >> ~/.bashrc
-echo "alias vi=nvim" >> ~/.bashrc
-echo "alias v=nvim" >> ~/.bashrc
-echo "alias vim=nvim" >> ~/.bashrc
+
 echo "alias ls=exa" >> ~/.bashrc
-echo "set -o vi" >> ~/.bashrc
 echo "export LANG=en_US.UTF-8" >> ~/.bashrc
 echo "export LC_ALL=en_US.UTF-8" >> ~/.bashrc
 echo "export LC_CTYPE=en_US.UTF-8" >> ~/.bashrc
-echo "export TERM=xterm-256color" >> ~/.bashrc
-echo 'alias gs="git status"' >> ~/.bashrc
-echo 'alias gpom="git push origin main"' >> ~/.bashrc
+
 source ~/.bashrc
 
