@@ -88,6 +88,7 @@ mkdir ~/.claude
 ln -s /workspace/dotfiles/nvim /root/.config/
 ln -s /workspace/dotfiles/claude/CLAUDE.md /root/.claude/
 ln -s /workspace/dotfiles/claude/commands /root/.claude/
+ln -s /workspace/dotfiles/claude/agents /root/.claude/
 
 # config for uv
 echo 'export UV_CACHE_DIR=/workspace/.cache/uv' >> ~/.bashrc
