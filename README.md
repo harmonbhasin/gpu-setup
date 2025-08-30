@@ -19,3 +19,8 @@ See pods `runpodctl get pod`
 Sadly it seems you can't get the ssh from here?
 However remove a pod using `runpodctl remove pod [podId]`
 
+
+## Future work
+
+- Consider adding rust download
+- Add what packages this downloads
