@@ -51,9 +51,9 @@ npm install -g tldr
 git config --global user.email "harmonprograms@protonmail.com"
 git config --global user.name "harm0n"
 
-
+cd /root/
 git clone https://github.com/harmonbhasin/dotfiles
-
+cd /workspace/
 
 echo '# Minimal tmux config for server
 
@@ -97,10 +97,10 @@ bind-key -n '\''C-l'\'' if-shell "$is_vim" '\''send-keys C-l'\'' '\''select-pane
 
 mkdir ~/.config
 mkdir ~/.claude
-ln -s /workspace/dotfiles/nvim /root/.config/
-ln -s /workspace/dotfiles/claude/CLAUDE.md /root/.claude/
-ln -s /workspace/dotfiles/claude/commands /root/.claude/
-ln -s /workspace/dotfiles/claude/agents /root/.claude/
+ln -s /root/dotfiles/nvim /root/.config/
+ln -s /root/dotfiles/claude/CLAUDE.md /root/.claude/
+ln -s /root/dotfiles/claude/commands /root/.claude/
+ln -s /root/dotfiles/claude/agents /root/.claude/
 
 # config for uv
 echo 'export UV_CACHE_DIR=/workspace/.cache/uv' >> ~/.bashrc
@@ -111,7 +111,7 @@ wget https://developer.nvidia.com/downloads/assets/tools/secure/nsight-systems/2
 dpkg -i NsightSystems-linux-cli-public-2025.3.1.90-3582212.deb
 
 # Source common configuration from dotfiles
-echo 'source /workspace/dotfiles/bash/.bashrc' >> ~/.bashrc
+echo 'source /root/dotfiles/bash/.bashrc' >> ~/.bashrc
 
 # Runpod specific setup
 echo 'export NVM_DIR="$HOME/.nvm"' >> ~/.bashrc
