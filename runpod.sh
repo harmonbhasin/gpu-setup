@@ -24,6 +24,17 @@ curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
 \. "$HOME/.nvm/nvm.sh"
 nvm install 22
 
+# rust
+# Install Rust using rustup
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+source ~/.bashrc
+# Verify the installation
+rustc --version
+cargo --version
+
+# install ripgrep
+cargo install ripgrep
+
 # neovim
 curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.tar.gz
 tar -C /opt -xzf nvim-linux-x86_64.tar.gz
