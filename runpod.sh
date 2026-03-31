@@ -7,7 +7,7 @@ pip install uv
 
 # Other stuff
 apt update 
-apt install -y vim gh npm zoxide ripgrep fzf tmux htop redis-server lsof net-tools iperf3 jq exa strace
+apt install -y vim gh npm zoxide ripgrep fzf tmux htop redis-server lsof net-tools iperf3 jq eza strace kitty-terminfo
 
 # Fix; necessary for markdown neovim plugin
 apt-get update && apt-get install -y locales
@@ -31,7 +31,8 @@ echo 'export PATH="$PATH:/opt/nvim-linux-x86_64/bin"' >> ~/.bashrc
 
 
 # login
-npm install -g @anthropic-ai/claude-code
+curl -fsSL https://claude.ai/install.sh | bash
+echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc && source ~/.bashrc
 npm install -g ccusage
 npm install -g tldr
 
@@ -106,7 +107,7 @@ echo 'export NVM_DIR="$HOME/.nvm"' >> ~/.bashrc
 echo '[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"' >> ~/.bashrc
 echo '[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"' >> ~/.bashrc
 
-echo "alias ls=exa" >> ~/.bashrc
+echo "alias ls=eza" >> ~/.bashrc
 echo "export LANG=en_US.UTF-8" >> ~/.bashrc
 echo "export LC_ALL=en_US.UTF-8" >> ~/.bashrc
 echo "export LC_CTYPE=en_US.UTF-8" >> ~/.bashrc
