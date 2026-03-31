@@ -17,7 +17,7 @@ Run `./runpod.sh` to install:
 ### Post-Installation Setup
 Run `source ~/.bashrc` first, then:
 1. Authenticate GitHub: `gh auth login`
-2. Configure Claude: `claude`
+2. Configure Claude: `claude` (a lot of the settings don't carry over anymore so you will need to manually change things)
 3. Set UV cache: `export UV_CACHE_DIR=/workspace/.cache/uv`
 4. If using SCP: `TERM=xterm-256color` (ghostty not recognized)
 
