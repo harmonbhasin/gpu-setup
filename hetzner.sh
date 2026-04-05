@@ -1,4 +1,7 @@
 
+# Install uv
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
 # Other stuff
 apt update
 apt install -y vim gh npm zoxide fzf tmux htop redis-server lsof net-tools iperf3 jq strace kitty-terminfo libclang-dev
