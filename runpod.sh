@@ -39,6 +39,7 @@ cargo install ripgrep tree-sitter-cli
 curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.tar.gz
 tar -C /opt -xzf nvim-linux-x86_64.tar.gz
 echo 'export PATH="$PATH:/opt/nvim-linux-x86_64/bin"' >> ~/.bashrc
+rm /workspace/nvim-linux-x86_64.tar.gz
 
 
 # login
@@ -109,6 +110,7 @@ mkdir -p /workspace/.cache/uv
 # nsys
 wget https://developer.nvidia.com/downloads/assets/tools/secure/nsight-systems/2025_3/NsightSystems-linux-cli-public-2025.3.1.90-3582212.deb
 dpkg -i NsightSystems-linux-cli-public-2025.3.1.90-3582212.deb
+rm /workspace/NsightSystems-linux-cli-public-2025.3.1.90-3582212.deb
 
 # Source common configuration from dotfiles
 echo 'source /root/dotfiles/bash/.bashrc' >> ~/.bashrc
