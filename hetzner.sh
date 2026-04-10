@@ -5,7 +5,11 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 
 # Other stuff
 apt update
-DEBIAN_FRONTEND=noninteractive apt install -y vim gh npm zoxide fzf tmux htop redis-server lsof net-tools iperf3 jq strace kitty-terminfo libclang-dev python3.12-venv python3-pip btop atop
+DEBIAN_FRONTEND=noninteractive apt install -y vim gh npm zoxide tmux htop redis-server lsof net-tools iperf3 jq strace kitty-terminfo libclang-dev python3.12-venv python3-pip btop atop
+
+# fzf
+git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
+~/.fzf/install --all --no-update-rc
 
 # NVM
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
