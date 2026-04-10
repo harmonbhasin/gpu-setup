@@ -1,3 +1,4 @@
+export HOME=/root
 
 # Install uv
 curl -LsSf https://astral.sh/uv/install.sh | sh
@@ -75,8 +76,8 @@ bind-key -n '\''C-j'\'' if-shell "$is_vim" '\''send-keys C-j'\'' '\''select-pane
 bind-key -n '\''C-k'\'' if-shell "$is_vim" '\''send-keys C-k'\'' '\''select-pane -U'\''
 bind-key -n '\''C-l'\'' if-shell "$is_vim" '\''send-keys C-l'\'' '\''select-pane -R'\''' > ~/.tmux.conf
 
-mkdir ~/.config
-mkdir ~/.claude
+mkdir -p ~/.config
+mkdir -p ~/.claude
 ln -s /root/dotfiles/nvim /root/.config/
 ln -s /root/dotfiles/claude/CLAUDE.md /root/.claude/
 ln -s /root/dotfiles/claude/commands /root/.claude/
