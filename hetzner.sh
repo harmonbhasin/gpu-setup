@@ -13,9 +13,8 @@ nvm install 22
 
 # rust
 # Install Rust using rustup
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-source ~/.bashrc
-
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+source "$HOME/.cargo/env"
 
 # install ripgrep and tree-sitter CLI (needed for nvim-treesitter on 0.12+)
 cargo install ripgrep tree-sitter-cli
