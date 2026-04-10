@@ -31,9 +31,6 @@ curl -fsSL https://claude.ai/install.sh | bash
 echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc && source ~/.bashrc
 
 # github
-git config --global user.email "harmonprograms@protonmail.com"
-git config --global user.name "harm0n"
-
 git clone https://github.com/harmonbhasin/dotfiles
 
 echo '# Minimal tmux config for server
@@ -78,10 +75,12 @@ bind-key -n '\''C-l'\'' if-shell "$is_vim" '\''send-keys C-l'\'' '\''select-pane
 
 mkdir -p ~/.config
 mkdir -p ~/.claude
+ln -sf /root/dotfiles/git/.gitconfig /root/.gitconfig
 ln -s /root/dotfiles/nvim /root/.config/
 ln -s /root/dotfiles/claude/CLAUDE.md /root/.claude/
 ln -s /root/dotfiles/claude/commands /root/.claude/
 ln -s /root/dotfiles/claude/agents /root/.claude/
+ln -s /root/dotfiles/claude/settings.json /root/.claude/
 
 # Source common configuration from dotfiles
 echo 'source /root/dotfiles/bash/.bashrc' >> ~/.bashrc
