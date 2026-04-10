@@ -35,7 +35,7 @@ curl -fsSL https://claude.ai/install.sh | bash
 echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc && source ~/.bashrc
 
 # github
-git clone https://github.com/harmonbhasin/dotfiles
+git clone https://github.com/harmonbhasin/dotfiles /root/dotfiles
 
 echo '# Minimal tmux config for server
 
