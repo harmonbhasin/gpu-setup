@@ -88,6 +88,10 @@ ln -s /root/dotfiles/claude/CLAUDE.md /root/.claude/
 ln -s /root/dotfiles/claude/commands /root/.claude/
 ln -s /root/dotfiles/claude/agents /root/.claude/
 ln -s /root/dotfiles/claude/settings.json /root/.claude/
+ln -s /root/dotfiles/claude/statusline-command.sh /root/.claude/
+
+# Set vim mode for Claude Code
+jq '. + {"editorMode": "vim"}' ~/.claude.json > /tmp/claude.json && mv /tmp/claude.json ~/.claude.json
 
 # Source common configuration from dotfiles
 echo 'source /root/dotfiles/bash/.bashrc' >> ~/.bashrc
