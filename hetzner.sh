@@ -37,6 +37,9 @@ echo 'export PATH="$PATH:/opt/nvim-linux-x86_64/bin"' >> ~/.bashrc
 curl -fsSL https://claude.ai/install.sh | bash
 echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc && source ~/.bashrc
 
+# codex
+npm i -g @openai/codex
+
 # github
 git clone https://github.com/harmonbhasin/dotfiles /root/dotfiles
 
@@ -89,6 +92,9 @@ ln -s /root/dotfiles/claude/commands /root/.claude/
 ln -s /root/dotfiles/claude/agents /root/.claude/
 ln -s /root/dotfiles/claude/settings.json /root/.claude/
 ln -s /root/dotfiles/claude/statusline-command.sh /root/.claude/
+
+ln -s /root/dotfiles/claude/CLAUDE.md ~/.codex/AGENTS.md
+ln -s /root/dotfiles/codex/config.toml ~/.codex/
 
 # Set vim mode for Claude Code
 jq '. + {"editorMode": "vim"}' ~/.claude.json > /tmp/claude.json && mv /tmp/claude.json ~/.claude.json
