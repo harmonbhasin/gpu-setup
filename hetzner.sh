@@ -3,6 +3,11 @@ export HOME=/root
 # Install uv
 curl -LsSf https://astral.sh/uv/install.sh | sh
 
+# Miniconda
+wget -O /root/Miniconda3-latest-Linux-x86_64.sh https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+bash /root/Miniconda3-latest-Linux-x86_64.sh -b -p /root/miniconda3
+/root/miniconda3/bin/conda init bash
+
 # Other stuff
 apt update
 DEBIAN_FRONTEND=noninteractive apt install -y vim gh npm zoxide tmux htop redis-server lsof net-tools iperf3 jq strace kitty-terminfo libclang-dev python3.12-venv python3-pip btop atop
