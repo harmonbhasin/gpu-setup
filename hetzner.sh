@@ -10,7 +10,12 @@ bash /root/Miniconda3-latest-Linux-x86_64.sh -b -p /root/miniconda3
 
 # Other stuff
 apt update
-DEBIAN_FRONTEND=noninteractive apt install -y vim gh npm zoxide tmux htop redis-server lsof net-tools iperf3 jq strace kitty-terminfo libclang-dev python3.12-venv python3-pip btop atop
+DEBIAN_FRONTEND=noninteractive apt install -y vim gh npm zoxide tmux htop redis-server lsof net-tools iperf3 jq strace kitty-terminfo libclang-dev python3.12-venv python3-pip btop atop unzip
+
+# aws
+curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+unzip awscliv2.zip
+sudo ./aws/install
 
 # fzf
 git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
