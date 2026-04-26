@@ -1,57 +1,96 @@
 export HOME=/root
 
+# Detect architecture
+if [ "$(uname -m)" = "aarch64" ]; then
+  ARCH=aarch64
+  NVIM_ARCH=arm64
+else
+  ARCH=x86_64
+  NVIM_ARCH=x86_64
+fi
+
+# Append a line to ~/.bashrc only if it's not already there
+add_to_bashrc() {
+  grep -qxF "$1" ~/.bashrc 2>/dev/null || echo "$1" >> ~/.bashrc
+}
+
 # Install uv
-curl -LsSf https://astral.sh/uv/install.sh | sh
+if [ ! -x "$HOME/.local/bin/uv" ] && ! command -v uv >/dev/null 2>&1; then
+  curl -LsSf https://astral.sh/uv/install.sh | sh
+fi
 
 # Miniconda
-wget -O /root/Miniconda3-latest-Linux-x86_64.sh https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
-bash /root/Miniconda3-latest-Linux-x86_64.sh -b -p /root/miniconda3
-/root/miniconda3/bin/conda init bash
+if [ ! -d /root/miniconda3 ]; then
+  wget -O "/root/Miniconda3-latest-Linux-${ARCH}.sh" "https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-${ARCH}.sh"
+  bash "/root/Miniconda3-latest-Linux-${ARCH}.sh" -b -p /root/miniconda3
+  /root/miniconda3/bin/conda init bash
+fi
 
 # Other stuff
 apt update
 DEBIAN_FRONTEND=noninteractive apt install -y vim gh npm zoxide tmux htop redis-server lsof net-tools iperf3 jq strace kitty-terminfo libclang-dev python3.12-venv python3-pip btop atop unzip
 
 # aws
-curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-unzip awscliv2.zip
-sudo ./aws/install
+if ! command -v aws >/dev/null 2>&1; then
+  curl "https://awscli.amazonaws.com/awscli-exe-linux-${ARCH}.zip" -o "awscliv2.zip"
+  unzip -o awscliv2.zip
+  sudo ./aws/install
+  rm -rf awscliv2.zip aws
+fi
 
 # fzf
-git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
+if [ ! -d "$HOME/.fzf" ]; then
+  git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
+fi
 ~/.fzf/install --all --no-update-rc
 
 # zoxide
-curl -sSfL https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | sh
+if ! command -v zoxide >/dev/null 2>&1; then
+  curl -sSfL https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | sh
+fi
 
 # NVM
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
+if [ ! -d "$HOME/.nvm" ]; then
+  curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
+fi
 \. "$HOME/.nvm/nvm.sh"
 nvm install 22
 
 # rust
 # Install Rust using rustup
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+if [ ! -x "$HOME/.cargo/bin/rustup" ]; then
+  curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+fi
 source "$HOME/.cargo/env"
 
 # install ripgrep and tree-sitter CLI (needed for nvim-treesitter on 0.12+)
-cargo install ripgrep tree-sitter-cli
+command -v rg >/dev/null 2>&1 || cargo install ripgrep
+command -v tree-sitter >/dev/null 2>&1 || cargo install tree-sitter-cli
 
 # neovim
-curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.tar.gz
-tar -C /opt -xzf nvim-linux-x86_64.tar.gz
-rm nvim-linux-x86_64.tar.gz
-echo 'export PATH="$PATH:/opt/nvim-linux-x86_64/bin"' >> ~/.bashrc
+if [ ! -d "/opt/nvim-linux-${NVIM_ARCH}" ]; then
+  curl -LO "https://github.com/neovim/neovim/releases/latest/download/nvim-linux-${NVIM_ARCH}.tar.gz"
+  tar -C /opt -xzf "nvim-linux-${NVIM_ARCH}.tar.gz"
+  rm "nvim-linux-${NVIM_ARCH}.tar.gz"
+fi
+add_to_bashrc "export PATH=\"\$PATH:/opt/nvim-linux-${NVIM_ARCH}/bin\""
 
 # claude
-curl -fsSL https://claude.ai/install.sh | bash
-echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc && source ~/.bashrc
+if [ ! -x "$HOME/.local/bin/claude" ]; then
+  curl -fsSL https://claude.ai/install.sh | bash
+fi
+add_to_bashrc 'export PATH="$HOME/.local/bin:$PATH"'
+source ~/.bashrc
 
 # codex
-npm i -g @openai/codex
+if ! command -v codex >/dev/null 2>&1; then
+  npm i -g @openai/codex
+fi
 
 # github
-git clone https://github.com/harmonbhasin/dotfiles /root/dotfiles
+if [ ! -d /root/dotfiles ]; then
+  git clone https://github.com/harmonbhasin/dotfiles /root/dotfiles
+fi
 
 echo '# Minimal tmux config for server
 
@@ -95,19 +134,22 @@ bind-key -n '\''C-l'\'' if-shell "$is_vim" '\''send-keys C-l'\'' '\''select-pane
 
 mkdir -p ~/.config
 mkdir -p ~/.claude
+mkdir -p ~/.codex
 ln -sf /root/dotfiles/git/.gitconfig /root/.gitconfig
-ln -s /root/dotfiles/nvim /root/.config/
-ln -s /root/dotfiles/claude/CLAUDE.md /root/.claude/
-ln -s /root/dotfiles/claude/commands /root/.claude/
-ln -s /root/dotfiles/claude/agents /root/.claude/
-ln -s /root/dotfiles/claude/settings.json /root/.claude/
-ln -s /root/dotfiles/claude/statusline-command.sh /root/.claude/
+ln -sfn /root/dotfiles/nvim /root/.config/nvim
+ln -sfn /root/dotfiles/claude/CLAUDE.md /root/.claude/CLAUDE.md
+ln -sfn /root/dotfiles/claude/commands /root/.claude/commands
+ln -sfn /root/dotfiles/claude/agents /root/.claude/agents
+ln -sfn /root/dotfiles/claude/settings.json /root/.claude/settings.json
+ln -sfn /root/dotfiles/claude/statusline-command.sh /root/.claude/statusline-command.sh
 
-ln -s /root/dotfiles/claude/CLAUDE.md ~/.codex/AGENTS.md
-ln -s /root/dotfiles/codex/config.toml ~/.codex/
+ln -sfn /root/dotfiles/claude/CLAUDE.md ~/.codex/AGENTS.md
+ln -sfn /root/dotfiles/codex/config.toml ~/.codex/config.toml
 
 # Set vim mode for Claude Code
-jq '. + {"editorMode": "vim"}' ~/.claude.json > /tmp/claude.json && mv /tmp/claude.json ~/.claude.json
+if [ -f ~/.claude.json ]; then
+  jq '. + {"editorMode": "vim"}' ~/.claude.json > /tmp/claude.json && mv /tmp/claude.json ~/.claude.json
+fi
 
 # Source common configuration from dotfiles
-echo 'source /root/dotfiles/bash/.bashrc' >> ~/.bashrc
+add_to_bashrc 'source /root/dotfiles/bash/.bashrc'
