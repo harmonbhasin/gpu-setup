@@ -153,3 +153,6 @@ fi
 
 # Source common configuration from dotfiles
 add_to_bashrc 'source /root/dotfiles/bash/.bashrc'
+
+# Pre-install nvim plugins so first launch isn't a half-broken lazy bootstrap
+"/opt/nvim-linux-${NVIM_ARCH}/bin/nvim" --headless "+Lazy! sync" +qa
