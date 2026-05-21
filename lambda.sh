@@ -1,57 +1,74 @@
-# Run from ~ so all downloads (nvim tarball, dotfiles clone, etc.) land in $HOME
-cd ~
+#!/bin/bash
+export HOME=/home/ubuntu
 
 # Append a line to ~/.bashrc only if it's not already there
 add_to_bashrc() {
-grep -qxF "$1" ~/.bashrc 2>/dev/null || echo "$1" >> ~/.bashrc
+  grep -qxF "$1" ~/.bashrc 2>/dev/null || echo "$1" >> ~/.bashrc
 }
 
-# UV stuff
-pip install uv
+# uv
+if [ ! -x "$HOME/.local/bin/uv" ] && ! command -v uv >/dev/null 2>&1; then
+  curl -LsSf https://astral.sh/uv/install.sh | sh
+fi
+
 pip install dbgpu
 pip3 install --upgrade b2
 
-# Other stuff
-sudo apt update
-sudo apt install -y vim gh zoxide fzf tmux htop lsof net-tools jq strace
+# System packages
+apt update
+DEBIAN_FRONTEND=noninteractive apt install -y vim gh zoxide fzf tmux htop lsof net-tools jq strace
 
-# clang-18 (not in jammy default repos — pull from apt.llvm.org)
-wget https://apt.llvm.org/llvm.sh
-chmod +x llvm.sh
-sudo ./llvm.sh 18 all
+# clang-18
+if ! command -v clang-18 >/dev/null 2>&1; then
+  wget -q https://apt.llvm.org/llvm.sh
+  chmod +x llvm.sh
+  ./llvm.sh 18 all <<< ""
+  rm llvm.sh
+fi
 
 # NVM
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
+if [ ! -d "$HOME/.nvm" ]; then
+  curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
+fi
 \. "$HOME/.nvm/nvm.sh"
 nvm install 22
 
-# rust
-# Install Rust using rustup
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-source ~/.bashrc
-# Verify the installation
-rustc --version
-cargo --version
+# Rust
+if [ ! -x "$HOME/.cargo/bin/rustup" ]; then
+  curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+fi
+source "$HOME/.cargo/env"
 
-cargo install ripgrep
-cargo install tree-sitter-cli
+command -v rg >/dev/null 2>&1 || cargo install ripgrep
+command -v tree-sitter >/dev/null 2>&1 || cargo install tree-sitter-cli
 
-# neovim
-curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.tar.gz
-sudo tar -C /opt -xzf nvim-linux-x86_64.tar.gz
-echo 'export PATH="$PATH:/opt/nvim-linux-x86_64/bin"' >> ~/.bashrc
+# Neovim
+if [ ! -d "/opt/nvim-linux-x86_64" ]; then
+  curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.tar.gz
+  tar -C /opt -xzf nvim-linux-x86_64.tar.gz
+  rm nvim-linux-x86_64.tar.gz
+fi
+add_to_bashrc 'export PATH="$PATH:/opt/nvim-linux-x86_64/bin"'
 
-curl -fsSL https://claude.ai/install.sh | bash
-echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc && source ~/.bashrc
-npm install -g tldr
+# Claude CLI
+if [ ! -x "$HOME/.local/bin/claude" ]; then
+  curl -fsSL https://claude.ai/install.sh | bash
+fi
+add_to_bashrc 'export PATH="$HOME/.local/bin:$PATH"'
 
-npm i -g @openai/codex
+# npm global tools
+\. "$HOME/.nvm/nvm.sh"
+command -v tldr >/dev/null 2>&1 || npm install -g tldr
+command -v codex >/dev/null 2>&1 || npm i -g @openai/codex
 
-# Github; i feel like gh auth should be able to be automated if i pass the auth key as a token to input
+# Git config
 git config --global user.email "harmonprograms@protonmail.com"
 git config --global user.name "harm0n"
 
-git clone https://github.com/harmonbhasin/dotfiles
+# Dotfiles
+if [ ! -d "$HOME/dotfiles" ]; then
+  git clone https://github.com/harmonbhasin/dotfiles "$HOME/dotfiles"
+fi
 
 echo '# Minimal tmux config for server
 
@@ -87,20 +104,33 @@ set -g mouse on
 bind r source-file ~/.tmux.conf \; display-message "Config reloaded."
 
 # Vim-tmux navigation
-is_vim="ps -o state= -o comm= -t '\'#{pane_tty}\'' | grep -iqE '\''^[^TXZ ]+ +(\\S+\\/)?g?(view|n?vim?x?)(diff)?$'\''"
+is_vim="ps -o state= -o comm= -t '\''#{pane_tty}'\'' | grep -iqE '\''^[^TXZ ]+ +(\\S+\\/)?g?(view|n?vim?x?)(diff)?$'\''"
 bind-key -n '\''C-h'\'' if-shell "$is_vim" '\''send-keys C-h'\'' '\''select-pane -L'\''
 bind-key -n '\''C-j'\'' if-shell "$is_vim" '\''send-keys C-j'\'' '\''select-pane -D'\''
 bind-key -n '\''C-k'\'' if-shell "$is_vim" '\''send-keys C-k'\'' '\''select-pane -U'\''
 bind-key -n '\''C-l'\'' if-shell "$is_vim" '\''send-keys C-l'\'' '\''select-pane -R'\''' > ~/.tmux.conf
 
-mkdir ~/.config
-mkdir ~/.claude
-ln -s ~/dotfiles/nvim ~/.config/
-ln -s ~/dotfiles/claude/CLAUDE.md ~/.claude/
-ln -s ~/dotfiles/claude/commands ~/.claude/
-ln -s ~/dotfiles/claude/agents ~/.claude/
+mkdir -p ~/.config
+mkdir -p ~/.claude
+mkdir -p ~/.codex
+ln -sfn "$HOME/dotfiles/git/.gitconfig" "$HOME/.gitconfig"
+ln -sfn "$HOME/dotfiles/nvim" "$HOME/.config/nvim"
+ln -sfn "$HOME/dotfiles/claude/CLAUDE.md" "$HOME/.claude/CLAUDE.md"
+ln -sfn "$HOME/dotfiles/claude/commands" "$HOME/.claude/commands"
+ln -sfn "$HOME/dotfiles/claude/agents" "$HOME/.claude/agents"
+ln -sfn "$HOME/dotfiles/claude/settings.json" "$HOME/.claude/settings.json"
+ln -sfn "$HOME/dotfiles/claude/statusline-command.sh" "$HOME/.claude/statusline-command.sh"
+
+ln -sfn "$HOME/dotfiles/claude/CLAUDE.md" ~/.codex/AGENTS.md
+ln -sfn "$HOME/dotfiles/codex/config.toml" ~/.codex/config.toml
+
+# Set vim mode for Claude Code
+if [ -f ~/.claude.json ]; then
+  jq '. + {"editorMode": "vim"}' ~/.claude.json > /tmp/claude.json && mv /tmp/claude.json ~/.claude.json
+fi
 
 # Source common configuration from dotfiles
-add_to_bashrc 'source ~/dotfiles/bash/.bashrc'
+add_to_bashrc "source $HOME/dotfiles/bash/.bashrc"
 
-
+# Pre-install nvim plugins so first launch isn't a half-broken lazy bootstrap
+"/opt/nvim-linux-x86_64/bin/nvim" --headless "+Lazy! sync" +qa
