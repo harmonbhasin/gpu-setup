@@ -1,3 +1,6 @@
+# Run from ~ so all downloads (nvim tarball, dotfiles clone, etc.) land in $HOME
+cd ~
+
 # Append a line to ~/.bashrc only if it's not already there
 add_to_bashrc() {
 grep -qxF "$1" ~/.bashrc 2>/dev/null || echo "$1" >> ~/.bashrc
@@ -10,7 +13,12 @@ pip3 install --upgrade b2
 
 # Other stuff
 sudo apt update
-sudo apt install -y vim gh zoxide fzf tmux htop lsof net-tools jq strace clang-18 libclang-18-dev libclang-common-18-dev
+sudo apt install -y vim gh zoxide fzf tmux htop lsof net-tools jq strace
+
+# clang-18 (not in jammy default repos — pull from apt.llvm.org)
+wget https://apt.llvm.org/llvm.sh
+chmod +x llvm.sh
+sudo ./llvm.sh 18 all
 
 # NVM
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
