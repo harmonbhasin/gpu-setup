@@ -84,6 +84,7 @@ set-option -g focus-events on
 
 # Start windows at 1
 set -g base-index 1
+setw -g pane-base-index 1
 
 # Basic pane splitting
 bind | split-window -h
@@ -108,7 +109,11 @@ is_vim="ps -o state= -o comm= -t '\''#{pane_tty}'\'' | grep -iqE '\''^[^TXZ ]+ +
 bind-key -n '\''C-h'\'' if-shell "$is_vim" '\''send-keys C-h'\'' '\''select-pane -L'\''
 bind-key -n '\''C-j'\'' if-shell "$is_vim" '\''send-keys C-j'\'' '\''select-pane -D'\''
 bind-key -n '\''C-k'\'' if-shell "$is_vim" '\''send-keys C-k'\'' '\''select-pane -U'\''
-bind-key -n '\''C-l'\'' if-shell "$is_vim" '\''send-keys C-l'\'' '\''select-pane -R'\''' > ~/.tmux.conf
+bind-key -n '\''C-l'\'' if-shell "$is_vim" '\''send-keys C-l'\'' '\''select-pane -R'\''
+
+# Show pane number on each pane'\''s border
+set -g pane-border-status top
+set -g pane-border-format " #P "' > ~/.tmux.conf
 
 mkdir -p ~/.config
 mkdir -p ~/.claude
