@@ -8,7 +8,7 @@ pip install uv
 
 # Other stuff
 sudo apt update
-sudo apt install -y vim gh npm zoxide fzf tmux htop lsof net-tools jq eza strace
+sudo apt install -y vim gh zoxide fzf tmux htop lsof net-tools jq strace clang-18 libclang-18-dev libclang-common-18-dev
 
 # NVM
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
