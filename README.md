@@ -21,6 +21,15 @@ Run `source ~/.bashrc` first, then:
 3. Set UV cache: `export UV_CACHE_DIR=/workspace/.cache/uv`
 4. If using SCP: `TERM=xterm-256color` (ghostty not recognized)
 
+## Lambda
+
+### Post-Installation Setup
+Authenticate B2 by exporting your application key (b2 picks these up automatically):
+```bash
+export B2_APPLICATION_KEY_ID=<your-keyID>
+export B2_APPLICATION_KEY=<your-applicationKey>
+```
+
 ## Future work
 
 - Consider adding rust download
