@@ -5,6 +5,7 @@ grep -qxF "$1" ~/.bashrc 2>/dev/null || echo "$1" >> ~/.bashrc
 
 # UV stuff
 pip install uv
+pip install dbgpu
 pip3 install --upgrade b2
 
 # Other stuff
