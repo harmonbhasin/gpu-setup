@@ -15,14 +15,14 @@ pip install dbgpu
 pip3 install --upgrade b2
 
 # System packages
-apt update
-DEBIAN_FRONTEND=noninteractive apt install -y vim gh zoxide fzf tmux htop lsof net-tools jq strace
+sudo apt update
+sudo DEBIAN_FRONTEND=noninteractive apt install -y vim gh zoxide fzf tmux htop lsof net-tools jq strace
 
 # clang-18
 if ! command -v clang-18 >/dev/null 2>&1; then
   wget -q https://apt.llvm.org/llvm.sh
   chmod +x llvm.sh
-  ./llvm.sh 18 all <<< ""
+  sudo ./llvm.sh 18 all <<< ""
   rm llvm.sh
 fi
 
@@ -45,7 +45,7 @@ command -v tree-sitter >/dev/null 2>&1 || cargo install tree-sitter-cli
 # Neovim
 if [ ! -d "/opt/nvim-linux-x86_64" ]; then
   curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.tar.gz
-  tar -C /opt -xzf nvim-linux-x86_64.tar.gz
+  sudo tar -C /opt -xzf nvim-linux-x86_64.tar.gz
   rm nvim-linux-x86_64.tar.gz
 fi
 add_to_bashrc 'export PATH="$PATH:/opt/nvim-linux-x86_64/bin"'
