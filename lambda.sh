@@ -6,13 +6,25 @@ add_to_bashrc() {
   grep -qxF "$1" ~/.bashrc 2>/dev/null || echo "$1" >> ~/.bashrc
 }
 
+# Repair ownership if a prior run (or accidental sudo) left user-space tool dirs root-owned.
+# Without this, nvm/npm/cargo fail with EACCES on the next run.
+for _d in "$HOME/.npm" "$HOME/.cargo" "$HOME/.rustup" "$HOME/.nvm" "$HOME/.local" "$HOME/.cache" "$HOME/.config"; do
+  if [ -d "$_d" ]; then
+    # chown if dir itself is wrong, OR if any file inside is root-owned (covers tarballs etc.)
+    if [ "$(stat -c '%U' "$_d")" != "ubuntu" ] || find "$_d" -xdev ! -user ubuntu -print -quit 2>/dev/null | grep -q .; then
+      sudo chown -R ubuntu:ubuntu "$_d"
+    fi
+  fi
+done
+unset _d
+
 # uv
 if [ ! -x "$HOME/.local/bin/uv" ] && ! command -v uv >/dev/null 2>&1; then
   curl -LsSf https://astral.sh/uv/install.sh | sh
 fi
 
-pip install dbgpu
-pip3 install --upgrade b2
+python3 -c "import dbgpu" 2>/dev/null || pip install dbgpu
+command -v b2 >/dev/null 2>&1 || pip3 install b2
 
 # System packages
 sudo apt update
@@ -31,7 +43,7 @@ if [ ! -d "$HOME/.nvm" ]; then
   curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
 fi
 \. "$HOME/.nvm/nvm.sh"
-nvm install 22
+nvm ls 22 >/dev/null 2>&1 || nvm install 22
 
 # Rust
 if [ ! -x "$HOME/.cargo/bin/rustup" ]; then
@@ -60,6 +72,7 @@ add_to_bashrc 'export PATH="$HOME/.local/bin:$PATH"'
 \. "$HOME/.nvm/nvm.sh"
 command -v tldr >/dev/null 2>&1 || npm install -g tldr
 command -v codex >/dev/null 2>&1 || npm i -g @openai/codex
+command -v hunkdiff >/dev/null 2>&1 || npm i -g hunkdiff
 
 # Git config
 git config --global user.email "harmonprograms@protonmail.com"
@@ -138,4 +151,6 @@ fi
 add_to_bashrc "source $HOME/dotfiles/bash/.bashrc"
 
 # Pre-install nvim plugins so first launch isn't a half-broken lazy bootstrap
-"/opt/nvim-linux-x86_64/bin/nvim" --headless "+Lazy! sync" +qa
+if [ ! -d "$HOME/.local/share/nvim/lazy/lazy.nvim" ]; then
+  "/opt/nvim-linux-x86_64/bin/nvim" --headless "+Lazy! sync" +qa
+fi
