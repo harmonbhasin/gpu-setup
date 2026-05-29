@@ -28,7 +28,7 @@ command -v b2 >/dev/null 2>&1 || pip3 install b2
 
 # System packages
 sudo apt update
-sudo DEBIAN_FRONTEND=noninteractive apt install -y vim gh zoxide fzf tmux htop lsof net-tools jq strace
+sudo DEBIAN_FRONTEND=noninteractive apt install -y vim gh zoxide fzf tmux htop lsof net-tools jq strace xsel
 
 # clang-18
 if ! command -v clang-18 >/dev/null 2>&1; then
@@ -84,47 +84,10 @@ if [ ! -d "$HOME/dotfiles" ]; then
   git clone https://github.com/harmonbhasin/dotfiles "$HOME/dotfiles"
 fi
 
-echo '# Minimal tmux config for server
-
-# Change prefix to C-a
-set -g prefix C-a
-unbind C-b
-
-# Neovim compatibility
-set -sg escape-time 10
-set -g default-terminal "screen-256color"
-set-option -a terminal-features "xterm:RGB"
-set-option -g focus-events on
-
-# Start windows at 1
-set -g base-index 1
-setw -g pane-base-index 1
-
-# Basic pane splitting
-bind | split-window -h
-bind - split-window -v
-
-# Use vi keybindings in copy mode
-set-window-option -g mode-keys vi
-
-# Allow yanking
-bind-key -T copy-mode-vi "v" send -X begin-selection
-bind-key -T copy-mode-vi y send-keys -X copy-pipe-and-cancel "xsel -i -p && xsel -o -p | xsel -i -b"
-bind-key p run "xsel -o | tmux load-buffer - ; tmux paste-buffer"
-
-# Enable mouse
-set -g mouse on
-
-# Reload config
-bind r source-file ~/.tmux.conf \; display-message "Config reloaded."
-
-# Show pane number on each pane'\''s border
-set -g pane-border-status top
-set -g pane-border-format " #P "' > ~/.tmux.conf
-
 mkdir -p ~/.config
 mkdir -p ~/.claude
 mkdir -p ~/.codex
+ln -sfn "$HOME/dotfiles/tmux/.tmux.conf" "$HOME/.tmux.conf"
 ln -sfn "$HOME/dotfiles/git/.gitconfig" "$HOME/.gitconfig"
 ln -sfn "$HOME/dotfiles/nvim" "$HOME/.config/nvim"
 ln -sfn "$HOME/dotfiles/claude/CLAUDE.md" "$HOME/.claude/CLAUDE.md"
@@ -143,6 +106,12 @@ fi
 
 # Source common configuration from dotfiles
 add_to_bashrc "source $HOME/dotfiles/bash/.bashrc"
+
+# tmux plugins (TPM) so the dotbar status line and other plugins load on first launch
+if [ ! -d "$HOME/.tmux/plugins/tpm" ]; then
+  git clone https://github.com/tmux-plugins/tpm "$HOME/.tmux/plugins/tpm"
+  "$HOME/.tmux/plugins/tpm/bin/install_plugins"
+fi
 
 # Pre-install nvim plugins so first launch isn't a half-broken lazy bootstrap
 if [ ! -d "$HOME/.local/share/nvim/lazy/lazy.nvim" ]; then
