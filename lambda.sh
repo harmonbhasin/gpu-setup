@@ -153,6 +153,6 @@ add_to_bashrc "source $HOME/dotfiles/bash/.bashrc"
 
 # Pre-install nvim plugins so first launch isn't a half-broken lazy bootstrap
 if [ ! -d "$HOME/.local/share/nvim/lazy/lazy.nvim" ]; then
-  sudo chown -R ubuntu:ubuntu /home/ubuntu/.local/ /home/ubuntu/.cache /home/ubuntu/.claude /home/ubuntu/.codex
+  sudo chown -R ubuntu:ubuntu /home/ubuntu/.local/ /home/ubuntu/.cache /home/ubuntu/.claude /home/ubuntu/.codex /home/ubuntu/.nvm
   "/opt/nvim-linux-x86_64/bin/nvim" --headless "+Lazy! sync" +qa
 fi
