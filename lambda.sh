@@ -69,6 +69,7 @@ fi
 add_to_bashrc 'export PATH="$HOME/.local/bin:$PATH"'
 
 # npm global tools
+sudo chown -R 1000:1000 "/home/ubuntu/.npm"
 \. "$HOME/.nvm/nvm.sh"
 command -v tldr >/dev/null 2>&1 || npm install -g tldr
 command -v codex >/dev/null 2>&1 || npm i -g @openai/codex
@@ -152,5 +153,6 @@ add_to_bashrc "source $HOME/dotfiles/bash/.bashrc"
 
 # Pre-install nvim plugins so first launch isn't a half-broken lazy bootstrap
 if [ ! -d "$HOME/.local/share/nvim/lazy/lazy.nvim" ]; then
+  sudo chown -R ubuntu:ubuntu /home/ubuntu/.local/ /home/ubuntu/.cache /home/ubuntu/.claude /home/ubuntu/.codex
   "/opt/nvim-linux-x86_64/bin/nvim" --headless "+Lazy! sync" +qa
 fi
