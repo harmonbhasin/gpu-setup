@@ -1,22 +1,26 @@
 #!/bin/bash
 export HOME=/home/ubuntu
+export USER=ubuntu
+export LOGNAME=ubuntu
+
+repair_home_ownership() {
+  sudo find "$HOME" -xdev \( ! -user ubuntu -o ! -group ubuntu \) -exec chown -h ubuntu:ubuntu {} + 2>/dev/null || true
+}
+
+if [ "$(id -u)" -eq 0 ]; then
+  find "$HOME" -xdev \( ! -user ubuntu -o ! -group ubuntu \) -exec chown -h ubuntu:ubuntu {} + 2>/dev/null || true
+  exec sudo -E -H -u ubuntu env HOME="$HOME" USER=ubuntu LOGNAME=ubuntu bash "$0" "$@"
+fi
+
+cd "$HOME" || exit 1
 
 # Append a line to ~/.bashrc only if it's not already there
 add_to_bashrc() {
   grep -qxF "$1" ~/.bashrc 2>/dev/null || echo "$1" >> ~/.bashrc
 }
 
-# Repair ownership if a prior run (or accidental sudo) left user-space tool dirs root-owned.
-# Without this, nvm/npm/cargo fail with EACCES on the next run.
-for _d in "$HOME/.npm" "$HOME/.cargo" "$HOME/.rustup" "$HOME/.nvm" "$HOME/.local" "$HOME/.cache" "$HOME/.config"; do
-  if [ -d "$_d" ]; then
-    # chown if dir itself is wrong, OR if any file inside is root-owned (covers tarballs etc.)
-    if [ "$(stat -c '%U' "$_d")" != "ubuntu" ] || find "$_d" -xdev ! -user ubuntu -print -quit 2>/dev/null | grep -q .; then
-      sudo chown -R ubuntu:ubuntu "$_d"
-    fi
-  fi
-done
-unset _d
+# Repair ownership if a prior cloud-init run left user-space files root-owned.
+repair_home_ownership
 
 # uv
 if [ ! -x "$HOME/.local/bin/uv" ] && ! command -v uv >/dev/null 2>&1; then
