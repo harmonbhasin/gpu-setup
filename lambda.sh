@@ -19,11 +19,13 @@ add_to_bashrc() {
   grep -qxF "$1" ~/.bashrc 2>/dev/null || echo "$1" >> ~/.bashrc
 }
 
-# Detect architecture (Neovim release assets are arch-specific)
+# Detect architecture (release assets are arch-specific)
 if [ "$(uname -m)" = "aarch64" ]; then
   NVIM_DIR=nvim-linux-arm64
+  FZF_ARCH=linux_arm64
 else
   NVIM_DIR=nvim-linux-x86_64
+  FZF_ARCH=linux_amd64
 fi
 
 # Repair ownership if a prior cloud-init run left user-space files root-owned.
@@ -72,6 +74,16 @@ if [ ! -d "/opt/$NVIM_DIR" ]; then
   rm "$NVIM_DIR.tar.gz"
 fi
 add_to_bashrc "export PATH=\"\$PATH:/opt/$NVIM_DIR/bin\""
+
+# fzf (apt ships an ancient build with no `--bash` keybinding support, so grab
+# the latest release; /usr/local/bin shadows the apt binary)
+if ! command -v fzf >/dev/null 2>&1 || ! fzf --bash >/dev/null 2>&1; then
+  FZF_VERSION=$(curl -s https://api.github.com/repos/junegunn/fzf/releases/latest | jq -r '.tag_name')
+  curl -LO "https://github.com/junegunn/fzf/releases/download/${FZF_VERSION}/fzf-${FZF_VERSION#v}-${FZF_ARCH}.tar.gz"
+  tar -xzf "fzf-${FZF_VERSION#v}-${FZF_ARCH}.tar.gz"
+  sudo mv fzf /usr/local/bin/fzf
+  rm "fzf-${FZF_VERSION#v}-${FZF_ARCH}.tar.gz"
+fi
 
 # Claude CLI
 if [ ! -x "$HOME/.local/bin/claude" ]; then
