@@ -19,6 +19,13 @@ add_to_bashrc() {
   grep -qxF "$1" ~/.bashrc 2>/dev/null || echo "$1" >> ~/.bashrc
 }
 
+# Detect architecture (Neovim release assets are arch-specific)
+if [ "$(uname -m)" = "aarch64" ]; then
+  NVIM_DIR=nvim-linux-arm64
+else
+  NVIM_DIR=nvim-linux-x86_64
+fi
+
 # Repair ownership if a prior cloud-init run left user-space files root-owned.
 repair_home_ownership
 
@@ -59,12 +66,12 @@ command -v rg >/dev/null 2>&1 || cargo install ripgrep
 command -v tree-sitter >/dev/null 2>&1 || cargo install tree-sitter-cli
 
 # Neovim
-if [ ! -d "/opt/nvim-linux-x86_64" ]; then
-  curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.tar.gz
-  sudo tar -C /opt -xzf nvim-linux-x86_64.tar.gz
-  rm nvim-linux-x86_64.tar.gz
+if [ ! -d "/opt/$NVIM_DIR" ]; then
+  curl -LO "https://github.com/neovim/neovim/releases/latest/download/$NVIM_DIR.tar.gz"
+  sudo tar -C /opt -xzf "$NVIM_DIR.tar.gz"
+  rm "$NVIM_DIR.tar.gz"
 fi
-add_to_bashrc 'export PATH="$PATH:/opt/nvim-linux-x86_64/bin"'
+add_to_bashrc "export PATH=\"\$PATH:/opt/$NVIM_DIR/bin\""
 
 # Claude CLI
 if [ ! -x "$HOME/.local/bin/claude" ]; then
@@ -120,5 +127,5 @@ fi
 # Pre-install nvim plugins so first launch isn't a half-broken lazy bootstrap
 if [ ! -d "$HOME/.local/share/nvim/lazy/lazy.nvim" ]; then
   sudo chown -R ubuntu:ubuntu /home/ubuntu/.local/ /home/ubuntu/.cache /home/ubuntu/.claude /home/ubuntu/.codex /home/ubuntu/.nvm
-  "/opt/nvim-linux-x86_64/bin/nvim" --headless "+Lazy! sync" +qa
+  "/opt/$NVIM_DIR/bin/nvim" --headless "+Lazy! sync" +qa
 fi
