@@ -66,6 +66,7 @@ source "$HOME/.cargo/env"
 
 command -v rg >/dev/null 2>&1 || cargo install ripgrep
 command -v tree-sitter >/dev/null 2>&1 || cargo install tree-sitter-cli
+command -v delta >/dev/null 2>&1 || cargo install git-delta  # git pager (see git/.gitconfig-remote)
 
 # Neovim
 if [ ! -d "/opt/$NVIM_DIR" ]; then
