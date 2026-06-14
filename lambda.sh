@@ -111,6 +111,7 @@ fi
 mkdir -p ~/.config
 mkdir -p ~/.claude
 mkdir -p ~/.codex
+mkdir -p ~/.agents
 ln -sfn "$HOME/dotfiles/tmux/.tmux.conf" "$HOME/.tmux.conf"
 ln -sfn "$HOME/dotfiles/git/.gitconfig" "$HOME/.gitconfig"
 ln -sfn "$HOME/dotfiles/nvim" "$HOME/.config/nvim"
@@ -122,6 +123,8 @@ ln -sfn "$HOME/dotfiles/claude/statusline-command.sh" "$HOME/.claude/statusline-
 
 ln -sfn "$HOME/dotfiles/claude/CLAUDE.md" ~/.codex/AGENTS.md
 ln -sfn "$HOME/dotfiles/codex/config.toml" ~/.codex/config.toml
+ln -sfn "$HOME/dotfiles/claude/skills" ~/.agents/
+
 
 # Set vim mode for Claude Code
 if [ -f ~/.claude.json ]; then
