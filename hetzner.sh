@@ -92,43 +92,10 @@ if [ ! -d /root/dotfiles ]; then
   git clone https://github.com/harmonbhasin/dotfiles /root/dotfiles
 fi
 
-echo '# Minimal tmux config for server
-
-# Change prefix to C-a
-set -g prefix C-a
-unbind C-b
-
-# Neovim compatibility
-set -sg escape-time 10
-set -g default-terminal "screen-256color"
-set-option -a terminal-features "xterm:RGB"
-set-option -g focus-events on
-
-# Start windows at 1
-set -g base-index 1
-
-# Basic pane splitting
-bind | split-window -h
-bind - split-window -v
-
-# Use vi keybindings in copy mode
-set-window-option -g mode-keys vi
-
-# Allow yanking
-bind-key -T copy-mode-vi "v" send -X begin-selection
-bind-key -T copy-mode-vi y send-keys -X copy-pipe-and-cancel "xsel -i -p && xsel -o -p | xsel -i -b"
-bind-key p run "xsel -o | tmux load-buffer - ; tmux paste-buffer"
-
-# Enable mouse
-set -g mouse on
-
-# Reload config
-bind r source-file ~/.tmux.conf \; display-message "Config reloaded."
-> ~/.tmux.conf
-
 mkdir -p ~/.config
 mkdir -p ~/.claude
 mkdir -p ~/.codex
+ln -sfn /root/dotfiles/tmux/.tmux.conf /root/.tmux.conf
 ln -sf /root/dotfiles/git/.gitconfig /root/.gitconfig
 ln -sfn /root/dotfiles/nvim /root/.config/nvim
 ln -sfn /root/dotfiles/claude/CLAUDE.md /root/.claude/CLAUDE.md
@@ -144,6 +111,14 @@ ln -sfn /root/dotfiles/codex/config.toml ~/.codex/config.toml
 if [ -f ~/.claude.json ]; then
   jq '. + {"editorMode": "vim"}' ~/.claude.json > /tmp/claude.json && mv /tmp/claude.json ~/.claude.json
 fi
+
+# tmux plugins (TPM) so the dotbar status line and other plugins load on first launch
+if [ ! -d "/root/.tmux/plugins/tpm" ]; then
+  git clone https://github.com/tmux-plugins/tpm "/root/.tmux/plugins/tpm"
+  "/root/.tmux/plugins/tpm/bin/install_plugins"
+fi
+
+
 
 # Source common configuration from dotfiles
 add_to_bashrc 'source /root/dotfiles/bash/.bashrc'
