@@ -106,6 +106,8 @@ ln -sfn /root/dotfiles/claude/statusline-command.sh /root/.claude/statusline-com
 
 ln -sfn /root/dotfiles/claude/CLAUDE.md ~/.codex/AGENTS.md
 ln -sfn /root/dotfiles/codex/config.toml ~/.codex/config.toml
+ln -sfn /root/dotfiles/claude/skills ~/.agents/
+ln -sfn /root/dotfiles/claude/skills ~/.claude/
 
 # Set vim mode for Claude Code
 if [ -f ~/.claude.json ]; then
